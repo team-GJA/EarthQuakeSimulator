@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    {{ template "head" . }}
+    <link rel="stylesheet" href="/static/stylesheet/topView.css">
+  </head>
+
+  <body>
+
+    <div id="loader"><img src="/static/image/load.gif" width="画像の幅" height="画像の高さ" alt="Loading..." /></div>
+    <div id="fade"></div>
+    {{ template "navbar" . }}
+    <div class="container contents">
+      <div class="row poys">
+        {{ range .poys }}
+        <div class="col-sm-6 col-md-4 poy">
+          <div class="thumbnail" onclick="location.href='/poys/detail/{{ .ID }}'">
+            <img class="media-object" src={{.Image}} alt={{.Image}}>
+            <div class="caption">
+              <h3>#{{ .ID }}:{{ .Title }}</h3>
+              <p>{{ .Description }}</p>
+            </div>
+          </div>
+        </div>
+        {{ end }}
+      </div>
+    </div>
+
+    {{ template "footer" }}
+    {{ template "js" . }}
+    <script src="/static/javascript/top.js" charset="utf-8"></script>
+  </body>
+
+</html>
