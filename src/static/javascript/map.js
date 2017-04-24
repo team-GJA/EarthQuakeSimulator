@@ -6,7 +6,6 @@ L.gridLayer.googleMutant({
   type: 'hybrid'
 }).addTo(map);
 
-
 var obspopup = "<p class=\"popup\">set the observation marker here?</p>"+
   "<button id=\"obscancel\" onclick=\"deleteObsMarker()\">CANCEL</button>"+
   "<button id=\"obsok\" onclick=\"setEpiMarker()\">OK</button>";
@@ -24,7 +23,6 @@ var parampopup = "<p class=\"popup\">set Magnitude and Depth</p>"+
 var obsMarker = L.marker().bindPopup(obspopup);
 var epiMarker = L.marker().bindPopup(epipopup);
 var isSetEpiMarker = false;
-
 
 var onMapClick = function(e) {
   if(!isSetEpiMarker){
@@ -44,11 +42,12 @@ function deleteObsMarker() {
 
 function setEpiMarker() {
   isSetEpiMarker = true;
+  obsMarker.closePopup();
 }
 
 function deleteEpiMarker() {
   epiMarker.remove();
-  isSetEpiMarker = false;
+  isSetEpiMarker = true;
 }
 
 function resetEpiMarker(){
