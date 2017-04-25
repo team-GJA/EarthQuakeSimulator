@@ -1,3 +1,6 @@
+$(document).ready(function(){
+  $.material.init();
+});
 //init and set map
 var map = L.map('map_elemnt')
   .setView([35.681382, 139.766084], 15);
@@ -26,9 +29,9 @@ var parampopup = "<p class=\"popup\">set Magnitude and Depth</p>"+
 
 
 //define marker object
-var obsMarker = L.marker().bindPopup(obspopup);
-var epiMarker = L.marker().bindPopup(epipopup);
-var isSetEpiMarker = false;
+var  obsMarker = L.marker().bindPopup(obspopup);
+var  epiMarker = L.marker().bindPopup(epipopup);
+var  isSetEpiMarker = false;
 
 
 var onMapClick = function(e) {
@@ -47,8 +50,8 @@ var onMapClick = function(e) {
 
 map.on('click',onMapClick);
 
-function deleteObsMarker() {
-  obsMarker.remove();
+function deleteEpiMarker() {
+  epiMarker.remove();
   isSetEpiMarker = false;
 }
 
@@ -79,7 +82,8 @@ function setSlider(slider, input, id, range) {
   slider = document.getElementById(id+'-slider');
   input = document.getElementById(id+'-input');
 
-  noUiSlider.create(slider, {
+  noUiSlider.create(slider,{
+    connect:"lower",
     start: range[0],
     range: {
       'min': range[1],
@@ -92,10 +96,7 @@ function setSlider(slider, input, id, range) {
   });
 
   input.addEventListener('change', function(){
-      slider.noUiSlider.set(this.value);
+    slider.noUiSlider.set(this.value);
   });
 }
 
-$(function(){
-  $.material.init();
-});
