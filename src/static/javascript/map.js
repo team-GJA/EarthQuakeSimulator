@@ -29,8 +29,28 @@ var parampopup = "<p class=\"popup\">set Magnitude and Depth</p>"+
 
 
 //define marker object
-var  obsMarker = L.marker().bindPopup(obspopup);
-var  epiMarker = L.marker().bindPopup(epipopup);
+var obsIcon = L.icon({
+      iconUrl: '../static/img/obsmarker.png',
+      iconSize: [110, 110*1.23],
+      iconAnchor: [55, 110*1.23],
+      popupAnchor: [0, -110*1.23],
+      shadowUrl: '../static/img/obsmarker_shadow.png',
+      shadowSize: [250, 250*0.33],
+      shadowAnchor: [60, 200*0.33]
+});
+
+var epiIcon = L.icon({
+      iconUrl: '../static/img/epimarker.png',
+      iconSize: [110, 110*1.23],
+      iconAnchor: [55, 110*1.23],
+      popupAnchor: [0, -110*1.23],
+      shadowUrl: '../static/img/epimarker_shadow.png',
+      shadowSize: [250, 250*0.33],
+      shadowAnchor: [60, 200*0.33]
+});
+
+var  obsMarker = L.marker([35.681382, 139.766084],{icon: obsIcon}).bindPopup(obspopup);
+var  epiMarker = L.marker([35.681382, 139.766084],{icon: epiIcon}).bindPopup(epipopup);
 var  isSetEpiMarker = false;
 
 
