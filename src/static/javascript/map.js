@@ -50,8 +50,8 @@ var onMapClick = function(e) {
 
 map.on('click',onMapClick);
 
-function deleteEpiMarker() {
-  epiMarker.remove();
+function deleteObsMarker() {
+  obsMarker.remove();
   isSetEpiMarker = false;
 }
 
