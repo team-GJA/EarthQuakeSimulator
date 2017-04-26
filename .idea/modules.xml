@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/EarthQuakeSimulator.iml" filepath="$PROJECT_DIR$/.idea/EarthQuakeSimulator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/EarthQuakeSimulator.iml" filepath="$PROJECT_DIR$/EarthQuakeSimulator.iml" />
     </modules>
   </component>
 </project>
