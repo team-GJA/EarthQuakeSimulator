@@ -19,6 +19,9 @@ $.getJSON("../static/json/plate.json", function (data) {
       }).addTo(map);
 });
 
+map.on('click',onMapClick);
+
+
 //define popup contents
 var obspopup = "<p class=\"popup\">set the observation marker here?</p>"+
   "<button class=\"btn btn-default\" id=\"obscancel\" onclick=\"deleteObsMarker()\">CANCEL</button>"+
@@ -31,8 +34,6 @@ var epipopup = "<p class=\"popup\">set the epicenter marker here?</p>"+
 var parampopup = "<p class=\"popup\">set Magnitude and Depth</p>"+
   "<p>Magnitude(Mj)</p>"+
   "<div id=\"mag-slider\" class=\"slider\"></div><input id=\"mag-input\"></input><br>"+
-  "<p>Depth(km)</p>"+
-  "<div id=\"dep-slider\" class=\"slider shor slider-material-orange\"></div><input id=\"dep-input\"></input><br>"+
   "<button class=\"btn btn-default\" id=\"paramcancel\" onclick=\"resetEpiMarker()\">CANCEL</button>"+
   "<button class=\"btn btn-default\" id=\"paramok\" onclick=\"\">OK</button>";
 
@@ -63,7 +64,7 @@ var  epiMarker = L.marker([35.681382, 139.766084],{icon: epiIcon}).bindPopup(epi
 var  isSetEpiMarker = false;
 
 
-var onMapClick = function(e) {
+function onMapClick(e) {
   if(!isSetEpiMarker){
     obsMarker.remove();
     obsMarker.setLatLng(e.latlng)
@@ -76,8 +77,6 @@ var onMapClick = function(e) {
       .addTo(map).openPopup();
   }
 }
-
-map.on('click',onMapClick);
 
 function deleteObsMarker() {
   obsMarker.remove();
