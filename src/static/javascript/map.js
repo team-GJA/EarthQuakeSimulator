@@ -1,6 +1,7 @@
-$(document).ready(function(){
-  $.material.init();
+$(function(){
+  $('body').bootstrapMaterialDesign();
 });
+
 //init and set map
 var map = L.map('map_elemnt')
   .setView([35.681382, 139.766084], 15);
@@ -30,23 +31,23 @@ var parampopup = "<p class=\"popup\">set Magnitude and Depth</p>"+
 
 //define marker object
 var obsIcon = L.icon({
-      iconUrl: '../static/img/obsmarker.png',
-      iconSize: [110, 110*1.23],
-      iconAnchor: [55, 110*1.23],
-      popupAnchor: [0, -110*1.23],
-      shadowUrl: '../static/img/obsmarker_shadow.png',
-      shadowSize: [250, 250*0.33],
-      shadowAnchor: [60, 200*0.33]
+  iconUrl: '../static/img/obsmarker.png',
+  iconSize: [110, 110*1.23],
+  iconAnchor: [55, 110*1.23],
+  popupAnchor: [0, -110*1.23],
+  shadowUrl: '../static/img/obsmarker_shadow.png',
+  shadowSize: [250, 250*0.33],
+  shadowAnchor: [60, 200*0.33]
 });
 
 var epiIcon = L.icon({
-      iconUrl: '../static/img/epimarker.png',
-      iconSize: [110, 110*1.23],
-      iconAnchor: [55, 110*1.23],
-      popupAnchor: [0, -110*1.23],
-      shadowUrl: '../static/img/epimarker_shadow.png',
-      shadowSize: [250, 250*0.33],
-      shadowAnchor: [60, 200*0.33]
+  iconUrl: '../static/img/epimarker.png',
+  iconSize: [110, 110*1.23],
+  iconAnchor: [55, 110*1.23],
+  popupAnchor: [0, -110*1.23],
+  shadowUrl: '../static/img/epimarker_shadow.png',
+  shadowSize: [250, 250*0.33],
+  shadowAnchor: [60, 200*0.33]
 });
 
 var  obsMarker = L.marker([35.681382, 139.766084],{icon: obsIcon}).bindPopup(obspopup);
