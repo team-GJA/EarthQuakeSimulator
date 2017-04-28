@@ -11,12 +11,12 @@ L.gridLayer.googleMutant({
 }).addTo(map);
 
 $.getJSON("../static/json/plate.json", function (data) {
-      L.geoJson(data, {
-        style:{
-          color:"#ff0000",
-          opacity:0.3
-        }
-      }).addTo(map);
+  L.geoJson(data, {
+    style:{
+      color:"#ff0000",
+      opacity:0.3
+    }
+  }).addTo(map);
 });
 
 map.on('click',onMapClick);
@@ -35,7 +35,7 @@ var parampopup = "<p class=\"popup\">set Magnitude and Depth</p>"+
   "<p>Magnitude(Mj)</p>"+
   "<div id=\"mag-slider\" class=\"slider\"></div><input id=\"mag-input\"></input><br>"+
   "<button class=\"btn btn-default\" id=\"paramcancel\" onclick=\"resetEpiMarker()\">CANCEL</button>"+
-  "<button class=\"btn btn-default\" id=\"paramok\" onclick=\"\">OK</button>";
+  "<button class=\"btn btn-default\" id=\"paramok\" onclick=\"postJson()\">OK</button>";
 
 
 //define marker object
@@ -102,8 +102,6 @@ function setEQParam() {
   var magSlider, depSlider, magInput, depInput;
   epiMarker.bindPopup(parampopup).openPopup();
   setSlider(magSlider, magInput, 'mag', [5,1,9]);
-  setSlider(depSlider, depInput, 'dep', [100,10,900]);
-
 }
 
 function setSlider(slider, input, id, range) {
