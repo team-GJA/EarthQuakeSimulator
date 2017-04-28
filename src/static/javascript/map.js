@@ -3,12 +3,20 @@ $(document).ready(function(){
 });
 //init and set map
 var map = L.map('map_elemnt')
-  .setView([35.681382, 139.766084], 15);
+  .setView([35.681382, 139.766084], 3);
 
 L.gridLayer.googleMutant({
   type: 'hybrid'
 }).addTo(map);
 
+$.getJSON("../static/json/plate.json", function (data) {
+      L.geoJson(data, {
+        style:{
+          color:"#ff0000",
+          opacity:0.3
+        }
+      }).addTo(map);
+});
 
 //define popup contents
 var obspopup = "<p class=\"popup\">set the observation marker here?</p>"+
