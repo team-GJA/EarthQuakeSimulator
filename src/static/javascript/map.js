@@ -2,13 +2,35 @@ $(function(){
   $('body').bootstrapMaterialDesign();
 });
 
+$(document).ready(function(){
+  mapLoadCallBack(
+    function(){
+      setTimeout(function(){
+        $("#title").animate({
+          opacity: 0
+        },
+          2000,
+          "swing",
+          function(){$("#title").detach()}
+        )
+      },
+        500
+      );
+    }
+  );
+});
+
 //init and set map
 var map = L.map('map_elemnt')
   .setView([35.681382, 139.766084], 3);
 
-L.gridLayer.googleMutant({
-  type: 'hybrid'
-}).addTo(map);
+function mapLoadCallBack(callback){
+  L.gridLayer.googleMutant({
+    type: 'hybrid'
+  }).addTo(map);
+  callback();
+}
+
 
 $.getJSON("../static/json/plate.json", function (data) {
   L.geoJson(data, {
