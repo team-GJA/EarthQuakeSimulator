@@ -44,7 +44,6 @@ $.getJSON("../static/json/plate.json", function (data) {
 
 map.on('click',onMapClick);
 
-
 //define popup contents
 var obspopup = "<p class=\"popup\">set the observation marker here?</p>"+
 "<p class=\"popupAutomode\">Auto mode: run simuration as auto set epicenter and Magnitude.</p>"+
@@ -85,10 +84,24 @@ var epiIcon = L.icon({
   shadowAnchor: [60, 200*0.33]
 });
 
-var  obsMarker = L.marker([35.681382, 139.766084],{icon: obsIcon}).bindPopup(obspopup);
-var  epiMarker = L.marker([35.681382, 139.766084],{icon: epiIcon}).bindPopup(epipopup);
+var  obsMarker = L.marker([],{icon: obsIcon}).bindPopup(obspopup);
+var  epiMarker = L.marker([],{icon: epiIcon}).bindPopup(epipopup);
 var  isSetEpiMarker = false;
 
+// L.circle([35.681,139.763], {
+//   opacity: 0,
+//   fillColor: '#0000ff',
+//   fillOpacity: 0.7,
+//   radius: 10000000,
+//   fillRule:"nonzero"
+// }).addTo(map);
+//
+// L.circle([35.681,139.763], {
+//   opacity: 0,
+//   fillColor: '#FF0000',
+//   fillOpacity: 0.7,
+//   radius: 5000000
+// }).addTo(map);
 
 function onMapClick(e) {
   if(!isSetEpiMarker){
