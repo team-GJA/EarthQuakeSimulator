@@ -4,7 +4,7 @@ function postJsonManualmode() {
 
   var data = {
     observation:{pos: {lat: obsMarker.getLatLng().lat, long: obsMarker.getLatLng().lng}},
-    epicenter: {pos:{lat: epiMarker.getLatLng().lat, long: epiMarker.getLatLng().lng}, magnitude:$("#mag-input").val()}
+    epicenter: {pos:{lat: epiMarker.getLatLng().lat, long: epiMarker.getLatLng().lng}, mag:$("#mag-input").val()}
   };
   console.log(data);
   $.ajax({
