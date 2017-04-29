@@ -5,14 +5,12 @@ function showResult(json_data){
   map.off("click");
   obsMarker.closePopup().unbindPopup();
   epiMarker.closePopup().unbindPopup();
-  console.log(epiMarker.getLatLng());
 
-  var epicenterPos = [epiMarker.getLatLng().lat, epiMarker.getLatLng().lng]
+  var epicenterPos = [json_data.Epicenter.lat, json_data.Epicenter.lng];
+  console.log(epicenterPos);
   var seismicIntensityColor = ["#8ec420","#b5d20e","#d6e000","#f0ea00","#f7d600","#f2ad00","#ed8403","#e8510f","#e60013"]
 
-  if(!epiMarker.getLatLng()){
-    epiMarker.setLaLng(epicenterPos);
-  }
+    epiMarker.setLatLng(epicenterPos).addTo(map);
 
   for(var i=0;i<9;i++){
     if(json_data.Scaleranges[i] != 0){

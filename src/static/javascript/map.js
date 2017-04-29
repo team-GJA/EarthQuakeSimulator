@@ -22,7 +22,10 @@ $(document).ready(function(){
 });
 
 //init and set map
-var map = L.map('map_elemnt')
+var map = L.map('map_elemnt',{
+        minZoom: 3,
+        maxZoom: 20
+    })
   .setView([35.681382, 139.766084], 3).setMaxBounds([[-360,0],[360,360]]);
 
 function mapLoadCallBack(callback){
