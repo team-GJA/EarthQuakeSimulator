@@ -6,11 +6,11 @@ import (
 	"fmt"
 	"github.com/gorilla/mux"
 	"io"
+	"math/rand"
+	"math"
 	"log"
 	"net/http"
 	"strconv"
-	"math/rand"
-	"math"
 )
 
 type Input struct {
@@ -36,7 +36,7 @@ type Output struct {
 	Scaleranges []int
 }
 
-func jsonHandlerFunc(rw http.ResponseWriter, req *http.Request) {
+func jsonHandler(rw http.ResponseWriter, req *http.Request) {
 	output := Output{ Status: 0, Result: "default", Scale: 0, Scaleranges: []int{0,0,0,0,0,0,0,0}}
 
 	defer func() {
@@ -104,14 +104,14 @@ func jsonHandlerFunc(rw http.ResponseWriter, req *http.Request) {
 	rw.WriteHeader(http.StatusOK)
 }
 
-
 func main() {
-	router := mux.NewRouter().StrictSlash(true)
-	router.HandleFunc("/", Index)
-	router.HandleFunc("/json", jsonHandlerFunc)
+	router := mux.NewRouter()
+
+	// 静的ファイルの提供
+	// $PROROOT/template/map.html が http://localhost:8080/template/map.html でアクセスできる
+	router.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("."))))
+
+	http.Handle("/", router)
 	log.Fatal(http.ListenAndServe(":8080", router))
 }
 
-func Index(w http.ResponseWriter, req *http.Request) {
-	http.StripPrefix("/", http.FileServer(http.Dir("."))).ServeHTTP(w, req)
-}
