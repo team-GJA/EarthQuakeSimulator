@@ -8,6 +8,11 @@ html, body {
   color: #eceff1;
 }
 
+div#title {
+  width:100vw;
+  height:100vh;
+  background-color: #000000;
+}
 div#map_elemnt {
   width:100vw;
   height:100vh;
