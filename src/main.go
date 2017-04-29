@@ -57,7 +57,7 @@ func main() {
 
 func JsonHandler(rw http.ResponseWriter, req *http.Request) {
 	fmt.Print("jsonHandler entered.")
-	output := Output{Status: 0, Result: "default", Scale: "0", Scaleranges: []int{0, 0, 0, 0, 0, 0, 0, 0}}
+	output := Output{Status: 0, Result: "default", Scale: "0", Scaleranges: []int{0, 0, 0, 0, 0, 0, 0, 0, 0}}
 
 	vars := mux.Vars(req)
 	output.Result = vars["mode"] + "モードでアクセスを受けました"
@@ -137,6 +137,10 @@ func JsonHandler(rw http.ResponseWriter, req *http.Request) {
 				output.Scaleranges[i] = 0
 			}
 		}
+		output.Scaleranges[8] = output.Scaleranges[6]
+		output.Scaleranges[7] = (output.Scaleranges[5] + output.Scaleranges[6]) / 2
+		output.Scaleranges[6] = output.Scaleranges[5]
+		output.Scaleranges[5] = (output.Scaleranges[4] + output.Scaleranges[5]) / 2
 	} else if vars["mode"] == "auto" {
 
 	} else {
