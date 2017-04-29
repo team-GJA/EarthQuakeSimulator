@@ -2,6 +2,7 @@ $(function(){
   $('body').bootstrapMaterialDesign();
 });
 
+//title animation
 $(document).ready(function(){
   mapLoadCallBack(
     function(){
@@ -46,18 +47,21 @@ map.on('click',onMapClick);
 
 //define popup contents
 var obspopup = "<p class=\"popup\">set the observation marker here?</p>"+
+"<p class=\"popupAutomode\">Auto mode: run simuration as auto set epicenter and Magnitude.</p>"+
   "<button class=\"btn btn-default\" id=\"obscancel\" onclick=\"deleteObsMarker()\">CANCEL</button>"+
-  "<button class=\"btn btn-default\" id=\"obsok\" onclick=\"setEpiMarker()\">OK</button>";
+  "<button class=\"btn btn-default\" id=\"obsok\" onclick=\"setEpiMarker()\">OK</button>"+
+"<button class=\"btn btn-default btn-warning\" id=\"obsrun\" onclick=\"postJsonAutomode()\">Auto mode Run!</button>";
+
 
 var epipopup = "<p class=\"popup\">set the epicenter marker here?</p>"+
   "<button class=\"btn btn-default\" id=\"epicancel\" onclick=\"deleteEpiMarker()\">CANCEL</button>"+
-  "<button class=\"btn btn-default\" id=\"obsok\" onclick=\"setEQParam()\">OK</button>";
+  "<button class=\"btn btn-default\" id=\"epiok\" onclick=\"setEQParam()\">OK</button>";
 
 var parampopup = "<p class=\"popup\">set Magnitude and Depth</p>"+
   "<p>Magnitude(Mj)</p>"+
   "<div id=\"mag-slider\" class=\"slider\"></div><input id=\"mag-input\"></input><br>"+
   "<button class=\"btn btn-default\" id=\"paramcancel\" onclick=\"resetEpiMarker()\">CANCEL</button>"+
-  "<button class=\"btn btn-default\" id=\"paramok\" onclick=\"postJson()\">OK</button>";
+  "<button class=\"btn btn-default btn-warning\" id=\"paramrun\" onclick=\"postJsonManualmode()\">Run!</button>";
 
 
 //define marker object
@@ -90,12 +94,12 @@ function onMapClick(e) {
   if(!isSetEpiMarker){
     obsMarker.remove();
     obsMarker.setLatLng(e.latlng)
-      .bindPopup(obspopup)
+      .bindPopup(obspopup,{maxWidth:800})
       .addTo(map).openPopup();
   }else{
     epiMarker.remove();
     epiMarker.setLatLng(e.latlng)
-      .bindPopup(epipopup)
+      .bindPopup(epipopup,{maxWidth:800})
       .addTo(map).openPopup();
   }
 }
@@ -117,12 +121,12 @@ function deleteEpiMarker() {
 
 function resetEpiMarker(){
   epiMarker.remove();
-  epiMarker.bindPopup(epipopup);
+  epiMarker.bindPopup(epipopup,{maxWidth:800});
 }
 
 function setEQParam() {
   var magSlider, depSlider, magInput, depInput;
-  epiMarker.bindPopup(parampopup).openPopup();
+  epiMarker.bindPopup(parampopup,{maxWidth:800}).openPopup();
   setSlider(magSlider, magInput, 'mag', [5,1,9]);
 }
 
