@@ -3,8 +3,8 @@ function postJsonManualmode() {
   button.attr("disabled", true);
 
   var data = {
-    observation:{pos: {lat: obsMarker.getLatLng().lat, long: obsMarker.getLatLng().lng}},
-    epicenter: {pos:{lat: epiMarker.getLatLng().lat, long: epiMarker.getLatLng().lng}, mag:$("#mag-input").val()}
+    observation: {pos: {lat: obsMarker.getLatLng().lat, lng: obsMarker.getLatLng().lng}},
+    epicenter: {pos:{lat: epiMarker.getLatLng().lat, lng: epiMarker.getLatLng().lng}, mag:parseFloat($("#mag-input").val())}
   };
   console.log(data);
   $.ajax({
@@ -14,11 +14,7 @@ function postJsonManualmode() {
     contentType: 'application/json',
     dataType: "json",
     success: function(json_data) {
-      if (!json_data[0]) {
-        alert("Transaction error. " + json_data[1]);
-        return;
-      }
-      location.reload();
+      showResult(json_data);
     },
     error: function() {
       alert("Server Error. Pleasy try again later.");
@@ -34,7 +30,7 @@ function postJsonAutomode() {
   button.attr("disabled", true);
 
   var data = {
-    observation:{pos: {lat: obsMarker.getLatLng().lat, long: obsMarker.getLatLng().lng}}
+    observation:{pos: {lat: obsMarker.getLatLng().lat, lng: obsMarker.getLatLng().lng}}
   };
   console.log(data);
   $.ajax({
@@ -44,11 +40,7 @@ function postJsonAutomode() {
     contentType: 'application/json',
     dataType: "json",
     success: function(json_data) {
-      if (!json_data[0]) {
-        alert("Transaction error. " + json_data[1]);
-        return;
-      }
-      location.reload();
+      showResult(json_data);
     },
     error: function() {
       alert("Server Error. Pleasy try again later.");
