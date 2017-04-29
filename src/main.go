@@ -105,35 +105,43 @@ func JsonHandler(rw http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	randvalue := rand.NormFloat64() - 1
-	scale := float32(randvalue + float64(0.947802 * input.Epicenter.Mag) - 0.004825 * math.Sqrt(float64(((input.Epicenter.Pos.Long - input.Observation.Pos.Long) / 0.0111) * ((input.Epicenter.Pos.Long - input.Observation.Pos.Long) / 0.0111) + ((input.Epicenter.Pos.Lat - input.Observation.Pos.Lat) / 0.0091) * ((input.Epicenter.Pos.Lat - input.Observation.Pos.Lat) / 0.0091))))
-	switch {
-	case scale >= 6.5 :
-		output.Scale = "7"
-	case scale < 6.5 && scale >= 6.0 :
-		output.Scale = "6強"
-	case scale < 6.0 && scale >= 5.5 :
-		output.Scale = "6弱"
-	case scale < 5.5 && scale >= 5.0 :
-		output.Scale = "5強"
-	case scale < 5.0 && scale >= 4.5 :
-		output.Scale = "5弱"
-	case scale < 4.5 && scale >= 3.5 :
-		output.Scale = "4"
-	case scale < 3.5 && scale >= 2.5 :
-		output.Scale = "3"
-	case scale < 2.5 && scale >= 1.5 :
-		output.Scale = "2"
-	case scale < 1.5 && scale >= 0.5 :
-		output.Scale = "1"
-	case scale < 0.5 :
-		output.Scale = "0"
-	}
-	for i, _ := range output.Scaleranges {
-		output.Scaleranges[i] = int((float32(randvalue) + 0.947802 * input.Epicenter.Mag - (float32(i) + 0.5)) / 0.004825)
-		if output.Scaleranges[i] < 0 {
-			output.Scaleranges[i] = 0
+	//震度計算
+	if vars["mode"] == "manual" {
+		randvalue := rand.NormFloat64() - 1
+		scale := float32(randvalue + float64(0.947802 * input.Epicenter.Mag) - 0.004825 * math.Sqrt(float64(((input.Epicenter.Pos.Long - input.Observation.Pos.Long) / 0.0111) * ((input.Epicenter.Pos.Long - input.Observation.Pos.Long) / 0.0111) + ((input.Epicenter.Pos.Lat - input.Observation.Pos.Lat) / 0.0091) * ((input.Epicenter.Pos.Lat - input.Observation.Pos.Lat) / 0.0091))))
+		switch {
+		case scale >= 6.5 :
+			output.Scale = "7"
+		case scale < 6.5 && scale >= 6.0 :
+			output.Scale = "6強"
+		case scale < 6.0 && scale >= 5.5 :
+			output.Scale = "6弱"
+		case scale < 5.5 && scale >= 5.0 :
+			output.Scale = "5強"
+		case scale < 5.0 && scale >= 4.5 :
+			output.Scale = "5弱"
+		case scale < 4.5 && scale >= 3.5 :
+			output.Scale = "4"
+		case scale < 3.5 && scale >= 2.5 :
+			output.Scale = "3"
+		case scale < 2.5 && scale >= 1.5 :
+			output.Scale = "2"
+		case scale < 1.5 && scale >= 0.5 :
+			output.Scale = "1"
+		case scale < 0.5 :
+			output.Scale = "0"
 		}
+		for i, _ := range output.Scaleranges {
+			output.Scaleranges[i] = int((float32(randvalue) + 0.947802 * input.Epicenter.Mag - (float32(i) + 0.5)) / 0.004825)
+			if output.Scaleranges[i] < 0 {
+				output.Scaleranges[i] = 0
+			}
+		}
+	} else if vars["mode"] == "auto" {
+
+	} else {
+		output.Status = 2
+		output.Result = "API Error!"
 	}
 
 	//そのまま座標を返す
