@@ -1,6 +1,5 @@
 package main
 
-
 import (
 	"encoding/json"
 	"fmt"
@@ -11,8 +10,14 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
 )
+
+const rowsplitnum = 10
+const colsplitnum = 30
+const LAT = 180
+const LNG = 360
 
 type Position struct {
 	Lat float32 `json:"lat"`
@@ -43,14 +48,12 @@ type Output struct {
 	Tips string
 }
 
-
-
 func main() {
+
+
+	//ルーティング
 	router := mux.NewRouter()
-
 	router.HandleFunc("/sim/{mode}", JsonHandler)
-
-	// 静的ファイルの提供
 	// $PROROOT/template/map.html が http://localhost:8080/template/map.html でアクセスできる
 	router.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("."))))
 
@@ -111,7 +114,7 @@ func JsonHandler(rw http.ResponseWriter, req *http.Request) {
 	//震度計算
 	if vars["mode"] == "manual" {
 		randvalue := rand.NormFloat64() - 1
-		scale := float32(randvalue + float64(0.947802 * input.Epicenter.Mag) - 0.004825 * math.Sqrt(float64(((input.Epicenter.Pos.Lng - input.Observation.Pos.Lng) / 0.0111) * ((input.Epicenter.Pos.Lng - input.Observation.Pos.Lng) / 0.0111) + ((input.Epicenter.Pos.Lat - input.Observation.Pos.Lat) / 0.0091) * ((input.Epicenter.Pos.Lat - input.Observation.Pos.Lat) / 0.0091))))
+		scale := float32(randvalue + float64(0.947802 * input.Epicenter.Mag) - 0.004825 * math.Sqrt(float64(((input.Epicenter.Pos.Lat- input.Observation.Pos.Lat) / 0.0111) * ((input.Epicenter.Pos.Lat - input.Observation.Pos.Lat) / 0.0111) + ((input.Epicenter.Pos.Lng - input.Observation.Pos.Lng) / 0.0091) * ((input.Epicenter.Pos.Lng - input.Observation.Pos.Lng) / 0.0091))))
 		switch {
 		case scale >= 6.5 :
 			output.Scale = "7"
@@ -144,18 +147,161 @@ func JsonHandler(rw http.ResponseWriter, req *http.Request) {
 		output.Scaleranges[7] = (output.Scaleranges[5] + output.Scaleranges[6]) / 2
 		output.Scaleranges[6] = output.Scaleranges[5]
 		output.Scaleranges[5] = (output.Scaleranges[4] + output.Scaleranges[5]) / 2
+
+		//そのまま座標を返す
+		output.Observation.Lat = input.Observation.Pos.Lat
+		output.Observation.Lng = input.Observation.Pos.Lng
+		output.Epicenter.Lat = input.Epicenter.Pos.Lat
+		output.Epicenter.Lng = input.Epicenter.Pos.Lng
 	} else if vars["mode"] == "auto" {
 
+
+
+		//データベース
+		db, err := sql.Open("mysql", "root:@/seism")
+		if err != nil {
+			panic(err.Error())
+		}
+		defer db.Close() // 関数がリターンする直前に呼び出される
+
+		rows, err := db.Query("SELECT latitude, longitude, tag FROM plate") //
+		if err != nil {
+			panic(err.Error())
+		}
+
+		//計算開始
+		rowbit := int(LAT/colsplitnum)
+		colbit := int(LNG/rowsplitnum)
+
+		latadj := int(input.Observation.Pos.Lat + 90)
+		lngadj := int(input.Observation.Pos.Lng)
+
+		lattag := latadj/rowbit
+		lngtag := lngadj/colbit
+
+		tag := lattag * rowsplitnum + lngtag
+
+		fmt.Print(tag)
+		mind := 9999.0
+		var minp Position
+		minp.Lat = -90.0
+		minp.Lng = -90.0
+
+		for rows.Next() {
+			var latitude float32
+			var longitude float32
+			var tagr int
+			dist := 9999.0
+			if err := rows.Scan(&latitude, &longitude, &tagr); err != nil {
+				log.Fatal(err)
+			}
+			fmt.Println(latitude, longitude, tagr)
+			if tagr == tag {
+				dist = math.Sqrt(float64(((latitude - input.Observation.Pos.Lat) / 0.0111) * ((latitude - input.Observation.Pos.Lat) / 0.0111) + ((longitude - input.Observation.Pos.Lng) / 0.0091) * ((longitude - input.Observation.Pos.Lng) / 0.0091)))
+				if mind > dist {
+					fmt.Print("mind更新")
+					mind = dist
+					minp.Lat = latitude
+					minp.Lng = longitude
+				}
+			}
+		}
+
+		fmt.Print(minp.Lat, minp.Lng)
+
+		//columns, err := rows.Columns() // カラム名を取得
+		//if err != nil {
+		//	panic(err.Error())
+		//}
+
+		//values := make([]sql.RawBytes, len(columns))
+
+		//  rows.Scan は引数に `[]interface{}`が必要.
+
+		//scanArgs := make([]interface{}, len(values))
+		//for i := range values {
+		//	scanArgs[i] = &values[i]
+		//}
+
+
+
+		//for rows.Next() {
+		//	err = rows.Scan(scanArgs...)
+		//	if err != nil {
+		//		panic(err.Error())
+		//	}
+		//
+		//	dist := 9999.0
+		//	flag := false
+		//	valuest := []float32{0.0, 0.0, 0.0}
+		//	for i, col := range values {
+		//		valuest[i] = float32(col)
+		//	}
+		//	for i, col := range values {
+		//		if i == 2{
+		//			if int(col) == tag {
+		//				flag = true
+		//			}
+		//		}
+		//		if flag == true {
+		//			dist = math.Sqrt(float64(((valuest[0] - input.Observation.Pos.Lng) / 0.0111) * ((valuest[0] - input.Observation.Pos.Lng) / 0.0111) + ((valuest[1] - input.Observation.Pos.Lat) / 0.0091) * ((valuest[1] - input.Observation.Pos.Lat) / 0.0091)))
+		//			if mind > dist {
+		//				mind = dist
+		//				minp.Lat = valuest[0]
+		//				minp.Lng = valuest[1]
+		//			}
+		//			flag = false
+		//		}
+		//	}
+		//
+		//}
+
+		randvalue := rand.NormFloat64() - 1
+		scale := float32(randvalue + float64(0.947802 * input.Epicenter.Mag) - 0.004825 * mind)
+		switch {
+		case scale >= 6.5 :
+			output.Scale = "7"
+		case scale < 6.5 && scale >= 6.0 :
+			output.Scale = "6強"
+		case scale < 6.0 && scale >= 5.5 :
+			output.Scale = "6弱"
+		case scale < 5.5 && scale >= 5.0 :
+			output.Scale = "5強"
+		case scale < 5.0 && scale >= 4.5 :
+			output.Scale = "5弱"
+		case scale < 4.5 && scale >= 3.5 :
+			output.Scale = "4"
+		case scale < 3.5 && scale >= 2.5 :
+			output.Scale = "3"
+		case scale < 2.5 && scale >= 1.5 :
+			output.Scale = "2"
+		case scale < 1.5 && scale >= 0.5 :
+			output.Scale = "1"
+		case scale < 0.5 :
+			output.Scale = "0"
+		}
+		for i, _ := range output.Scaleranges {
+			output.Scaleranges[i] = int((float32(randvalue) + 0.947802 * input.Epicenter.Mag - (float32(i) + 0.5)) / 0.004825)
+			if output.Scaleranges[i] < 0 {
+				output.Scaleranges[i] = 0
+			}
+		}
+		output.Scaleranges[8] = output.Scaleranges[6]
+		output.Scaleranges[7] = (output.Scaleranges[5] + output.Scaleranges[6]) / 2
+		output.Scaleranges[6] = output.Scaleranges[5]
+		output.Scaleranges[5] = (output.Scaleranges[4] + output.Scaleranges[5]) / 2
+
+		//見つけた座標を返す
+		output.Observation.Lat = input.Observation.Pos.Lat
+		output.Observation.Lng = input.Observation.Pos.Lng
+		output.Epicenter.Lat = minp.Lat
+		output.Epicenter.Lng = minp.Lng
 	} else {
 		output.Status = 2
 		output.Result = "API Error!"
 	}
 
-	//そのまま座標を返す
-	output.Observation.Lat = input.Observation.Pos.Lat
-	output.Observation.Lng = input.Observation.Pos.Lng
-	output.Epicenter.Lat = input.Epicenter.Pos.Lat
-	output.Epicenter.Lng = input.Epicenter.Pos.Lng
+
 
 
 	tips := []string{
