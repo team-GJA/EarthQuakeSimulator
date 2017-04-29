@@ -40,7 +40,10 @@ type Output struct {
 	Scaleranges []int
 	Observation Position
 	Epicenter Position
+	Tips string
 }
+
+
 
 func main() {
 	router := mux.NewRouter()
@@ -153,6 +156,15 @@ func JsonHandler(rw http.ResponseWriter, req *http.Request) {
 	output.Observation.Lng = input.Observation.Pos.Lng
 	output.Epicenter.Lat = input.Epicenter.Pos.Lat
 	output.Epicenter.Lng = input.Epicenter.Pos.Lng
+
+
+	tips := []string{
+		"キッチンの火を急いで止めに行くとけがをする恐れがありますので、揺れが収まってから火を消しに行きましょう。",
+		"調理中に地震が起こった場合調理器具が落ちやけどする恐れがあるので、コンロから離れましょう。",
+		"揺れの合間を見て、ドアや窓を開けて出口を確保しましょう。"}
+
+	//ティップス
+	output.Tips = tips[rand.Intn(3)]
 
 	fmt.Println(input)
 
