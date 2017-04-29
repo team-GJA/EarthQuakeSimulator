@@ -52,5 +52,9 @@ div#map_elemnt {
 }
 
 .popup {
+  font-size: 24px;
+}
+
+.popupAutomode {
   font-size: 16px;
 }
