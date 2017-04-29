@@ -7,14 +7,13 @@ function showResult(json_data){
   console.log(epiMarker.getLatLng());
 
   var epicenterPos = [epiMarker.getLatLng().lat, epiMarker.getLatLng().lng]
-  // var seismicIntensityColor = ["#8ec420","#b5d20e","#d6e000","#f0ea00","#f7d600","#f2ad00","#ed8403","#e8510f","#e60013"]
-  var seismicIntensityColor = ["#8ec420","#b5d20e","#d6e000","#f0ea00","#f2ad00","#e8510f","#e60013"]
+  var seismicIntensityColor = ["#8ec420","#b5d20e","#d6e000","#f0ea00","#f7d600","#f2ad00","#ed8403","#e8510f","#e60013"]
 
   if(!epiMarker.getLatLng()){
     epiMarker.setLaLng(epicenterPos);
   }
 
-  for(var i=0;i<8;i++){
+  for(var i=0;i<9;i++){
     if(json_data.Scaleranges[i] != 0){
       L.circle(epicenterPos, {
         opacity: 0,
@@ -25,4 +24,5 @@ function showResult(json_data){
       }).addTo(map);
     }
   }
+  obsMarker.bindPopup("震度"+json_data.Scale).openPopup();
 }
