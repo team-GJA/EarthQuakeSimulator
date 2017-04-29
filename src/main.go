@@ -257,7 +257,7 @@ func JsonHandler(rw http.ResponseWriter, req *http.Request) {
 		//}
 
 		randvalue := rand.NormFloat64() - 1
-		scale := float32(randvalue + float64(0.947802 * input.Epicenter.Mag) - 0.004825 * mind)
+		scale := float32(randvalue + float64(0.947802 * (5 + 2 * rand.Float32())) - 0.004825 * mind)
 		switch {
 		case scale >= 6.5 :
 			output.Scale = "7"
@@ -281,7 +281,7 @@ func JsonHandler(rw http.ResponseWriter, req *http.Request) {
 			output.Scale = "0"
 		}
 		for i, _ := range output.Scaleranges {
-			output.Scaleranges[i] = int((float32(randvalue) + 0.947802 * input.Epicenter.Mag - (float32(i) + 0.5)) / 0.004825)
+			output.Scaleranges[i] = int((float32(randvalue) + 0.947802 * (5 + 2 * rand.Float32()) - (float32(i) + 0.5)) / 0.004825)
 			if output.Scaleranges[i] < 0 {
 				output.Scaleranges[i] = 0
 			}
