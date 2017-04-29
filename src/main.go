@@ -16,7 +16,7 @@ import (
 
 type Position struct {
 	Lat float32 `json:"lat"`
-	Long float32 `json:"long"`
+	Lng float32 `json:"lng"`
 }
 
 type Observation struct {
@@ -108,7 +108,7 @@ func JsonHandler(rw http.ResponseWriter, req *http.Request) {
 	//震度計算
 	if vars["mode"] == "manual" {
 		randvalue := rand.NormFloat64() - 1
-		scale := float32(randvalue + float64(0.947802 * input.Epicenter.Mag) - 0.004825 * math.Sqrt(float64(((input.Epicenter.Pos.Long - input.Observation.Pos.Long) / 0.0111) * ((input.Epicenter.Pos.Long - input.Observation.Pos.Long) / 0.0111) + ((input.Epicenter.Pos.Lat - input.Observation.Pos.Lat) / 0.0091) * ((input.Epicenter.Pos.Lat - input.Observation.Pos.Lat) / 0.0091))))
+		scale := float32(randvalue + float64(0.947802 * input.Epicenter.Mag) - 0.004825 * math.Sqrt(float64(((input.Epicenter.Pos.Lng - input.Observation.Pos.Lng) / 0.0111) * ((input.Epicenter.Pos.Lng - input.Observation.Pos.Lng) / 0.0111) + ((input.Epicenter.Pos.Lat - input.Observation.Pos.Lat) / 0.0091) * ((input.Epicenter.Pos.Lat - input.Observation.Pos.Lat) / 0.0091))))
 		switch {
 		case scale >= 6.5 :
 			output.Scale = "7"
@@ -146,9 +146,9 @@ func JsonHandler(rw http.ResponseWriter, req *http.Request) {
 
 	//そのまま座標を返す
 	output.Observation.Lat = input.Observation.Pos.Lat
-	output.Observation.Long = input.Observation.Pos.Long
+	output.Observation.Lng = input.Observation.Pos.Lng
 	output.Epicenter.Lat = input.Epicenter.Pos.Lat
-	output.Epicenter.Long = input.Epicenter.Pos.Long
+	output.Epicenter.Lng = input.Epicenter.Pos.Lng
 
 	fmt.Println(input)
 
