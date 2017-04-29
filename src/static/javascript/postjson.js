@@ -3,8 +3,8 @@ function postJsonManualmode() {
   button.attr("disabled", true);
 
   var data = {
-    observation: {lat: obsMarker.getLatLng().lat, long: obsMarker.getLatLng().lng},
-    epicenter: {lat: epiMarker.getLatLng().lat, long: epiMarker.getLatLng().lng, magnitude:$("#mag-input").val()}
+    observation:{pos: {lat: obsMarker.getLatLng().lat, long: obsMarker.getLatLng().lng}},
+    epicenter: {pos:{lat: epiMarker.getLatLng().lat, long: epiMarker.getLatLng().lng}, magnitude:$("#mag-input").val()}
   };
   console.log(data);
   $.ajax({
@@ -34,7 +34,7 @@ function postJsonAutomode() {
   button.attr("disabled", true);
 
   var data = {
-    observation: {lat: obsMarker.getLatLng().lat, long: obsMarker.getLatLng().lng}
+    observation:{pos: {lat: obsMarker.getLatLng().lat, long: obsMarker.getLatLng().lng}}
   };
   console.log(data);
   $.ajax({
