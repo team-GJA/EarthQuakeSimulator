@@ -2,22 +2,47 @@ $(function(){
   $('body').bootstrapMaterialDesign();
 });
 
+$(document).ready(function(){
+  mapLoadCallBack(
+    function(){
+      setTimeout(function(){
+        $("#title").animate({
+          opacity: 0
+        },
+          2000,
+          "swing",
+          function(){$("#title").detach()}
+        )
+      },
+        500
+      );
+    }
+  );
+});
+
 //init and set map
 var map = L.map('map_elemnt')
   .setView([35.681382, 139.766084], 3);
 
-L.gridLayer.googleMutant({
-  type: 'hybrid'
-}).addTo(map);
+function mapLoadCallBack(callback){
+  L.gridLayer.googleMutant({
+    type: 'hybrid'
+  }).addTo(map);
+  callback();
+}
+
 
 $.getJSON("../static/json/plate.json", function (data) {
-      L.geoJson(data, {
-        style:{
-          color:"#ff0000",
-          opacity:0.3
-        }
-      }).addTo(map);
+  L.geoJson(data, {
+    style:{
+      color:"#ff0000",
+      opacity:0.3
+    }
+  }).addTo(map);
 });
+
+map.on('click',onMapClick);
+
 
 //define popup contents
 var obspopup = "<p class=\"popup\">set the observation marker here?</p>"+
@@ -31,10 +56,8 @@ var epipopup = "<p class=\"popup\">set the epicenter marker here?</p>"+
 var parampopup = "<p class=\"popup\">set Magnitude and Depth</p>"+
   "<p>Magnitude(Mj)</p>"+
   "<div id=\"mag-slider\" class=\"slider\"></div><input id=\"mag-input\"></input><br>"+
-  "<p>Depth(km)</p>"+
-  "<div id=\"dep-slider\" class=\"slider shor slider-material-orange\"></div><input id=\"dep-input\"></input><br>"+
   "<button class=\"btn btn-default\" id=\"paramcancel\" onclick=\"resetEpiMarker()\">CANCEL</button>"+
-  "<button class=\"btn btn-default\" id=\"paramok\" onclick=\"\">OK</button>";
+  "<button class=\"btn btn-default\" id=\"paramok\" onclick=\"postJson()\">OK</button>";
 
 
 //define marker object
@@ -63,7 +86,7 @@ var  epiMarker = L.marker([35.681382, 139.766084],{icon: epiIcon}).bindPopup(epi
 var  isSetEpiMarker = false;
 
 
-var onMapClick = function(e) {
+function onMapClick(e) {
   if(!isSetEpiMarker){
     obsMarker.remove();
     obsMarker.setLatLng(e.latlng)
@@ -76,8 +99,6 @@ var onMapClick = function(e) {
       .addTo(map).openPopup();
   }
 }
-
-map.on('click',onMapClick);
 
 function deleteObsMarker() {
   obsMarker.remove();
@@ -103,8 +124,6 @@ function setEQParam() {
   var magSlider, depSlider, magInput, depInput;
   epiMarker.bindPopup(parampopup).openPopup();
   setSlider(magSlider, magInput, 'mag', [5,1,9]);
-  setSlider(depSlider, depInput, 'dep', [100,10,900]);
-
 }
 
 function setSlider(slider, input, id, range) {

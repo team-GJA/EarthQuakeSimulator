@@ -1,6 +1,7 @@
 html, body {
   width:100%;
   height:100%;
+  position: relative;
 }
 
 .bmd-layout-drawer {
@@ -8,10 +9,38 @@ html, body {
   color: #eceff1;
 }
 
+img#titleicon {
+  opacity: 1;
+  position: absolute;
+  width: auto;
+  height: auto;
+  left: 50%;
+  top: 40%;
+  -webkit-transform: translate3d(-50%, -50%, 0);
+  transform: translate3d(-50%, -50%, 0);
+}
+
+img#headericon {
+  width: 20%;
+}
+
+img#drawericon {
+  width: 70%;
+}
+div#title {
+  width:100vw;
+  height:100vh;
+  background: rgba(0,0,0,0.7);
+  position: absolute;
+  z-index: 110 !important;
+  text-align:center;
+
+}
 div#map_elemnt {
   width:100vw;
   height:100vh;
   border: solid 1px #999;
+  position:absolute;
 }
 
 .leaflet-map-pane {
