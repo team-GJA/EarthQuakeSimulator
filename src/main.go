@@ -36,7 +36,7 @@ type Input struct {
 type Output struct {
 	Status int
 	Result string
-	Scale float32
+	Scale string
 	Scaleranges []int
 	Observation Position
 	Epicenter Position
@@ -57,11 +57,10 @@ func main() {
 
 func JsonHandler(rw http.ResponseWriter, req *http.Request) {
 	fmt.Print("jsonHandler entered.")
-	output := Output{ Status: 0, Result: "default", Scale: 0, Scaleranges: []int{0,0,0,0,0,0,0,0}}
+	output := Output{Status: 0, Result: "default", Scale: "0", Scaleranges: []int{0, 0, 0, 0, 0, 0, 0, 0}}
 
 	vars := mux.Vars(req)
 	output.Result = vars["mode"] + "モードでアクセスを受けました"
-
 
 	defer func() {
 		outjson, e := json.Marshal(output)
@@ -106,8 +105,30 @@ func JsonHandler(rw http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	randvalue := rand.NormFloat64()
-	output.Scale = float32(randvalue + float64(0.947802 * input.Epicenter.Mag) - 0.004825 * math.Sqrt(float64(((input.Epicenter.Pos.Long - input.Observation.Pos.Long) / 0.0111) * ((input.Epicenter.Pos.Long - input.Observation.Pos.Long) / 0.0111) + ((input.Epicenter.Pos.Lat - input.Observation.Pos.Lat) / 0.0091) * ((input.Epicenter.Pos.Lat - input.Observation.Pos.Lat) / 0.0091))))
+	randvalue := rand.NormFloat64() - 1
+	scale := float32(randvalue + float64(0.947802 * input.Epicenter.Mag) - 0.004825 * math.Sqrt(float64(((input.Epicenter.Pos.Long - input.Observation.Pos.Long) / 0.0111) * ((input.Epicenter.Pos.Long - input.Observation.Pos.Long) / 0.0111) + ((input.Epicenter.Pos.Lat - input.Observation.Pos.Lat) / 0.0091) * ((input.Epicenter.Pos.Lat - input.Observation.Pos.Lat) / 0.0091))))
+	switch {
+	case scale >= 6.5 :
+		output.Scale = "7"
+	case scale < 6.5 && scale >= 6.0 :
+		output.Scale = "6強"
+	case scale < 6.0 && scale >= 5.5 :
+		output.Scale = "6弱"
+	case scale < 5.5 && scale >= 5.0 :
+		output.Scale = "5強"
+	case scale < 5.0 && scale >= 4.5 :
+		output.Scale = "5弱"
+	case scale < 4.5 && scale >= 3.5 :
+		output.Scale = "4"
+	case scale < 3.5 && scale >= 2.5 :
+		output.Scale = "3"
+	case scale < 2.5 && scale >= 1.5 :
+		output.Scale = "2"
+	case scale < 1.5 && scale >= 0.5 :
+		output.Scale = "1"
+	case scale < 0.5 :
+		output.Scale = "0"
+	}
 	for i, _ := range output.Scaleranges {
 		output.Scaleranges[i] = int((float32(randvalue) + 0.947802 * input.Epicenter.Mag - (float32(i) + 0.5)) / 0.004825)
 		if output.Scaleranges[i] < 0 {
@@ -122,11 +143,7 @@ func JsonHandler(rw http.ResponseWriter, req *http.Request) {
 	output.Epicenter.Long = input.Epicenter.Pos.Long
 
 	fmt.Println(input)
-	if output.Scale < 0 {
-		output.Status = 2
-		output.Scale = 0
-		output.Result = "Scale is Negative Number!"
-	}
+
 	rw.WriteHeader(http.StatusOK)
 }
 
