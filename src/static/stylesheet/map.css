@@ -58,3 +58,10 @@ div#map_elemnt {
 .popupAutomode {
   font-size: 16px;
 }
+
+.popupSeismic {
+  font-size: 30px;
+}
+.popupTips {
+  font-size: 24px;
+}
