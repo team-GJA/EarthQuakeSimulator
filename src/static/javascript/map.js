@@ -48,19 +48,19 @@ $.getJSON("../static/json/plate.json", function (data) {
 map.on('click',onMapClick);
 
 //define popup contents
-var obspopup = "<p class=\"popup\">set the observation marker here?</p>"+
-"<p class=\"popupAutomode\">Auto mode: run simuration as auto set epicenter and Magnitude.</p>"+
-  "<button class=\"btn btn-default\" id=\"obscancel\" onclick=\"deleteObsMarker()\">CANCEL</button>"+
+var obspopup = "<h4>set the observation marker here?</h4>"+
+"<p class=\"text-warning\">Auto mode: run simuration as auto set epicenter and Magnitude.</p>"+
+  "<p><button class=\"btn btn-default\" id=\"obscancel\" onclick=\"deleteObsMarker()\">CANCEL</button>"+
   "<button class=\"btn btn-default\" id=\"obsok\" onclick=\"setEpiMarker()\">OK</button>"+
-"<button class=\"btn btn-default btn-warning\" id=\"obsrun\" onclick=\"postJsonAutomode()\">Auto mode Run!</button>";
+"<button class=\"btn btn-default btn-warning pull-right\" id=\"obsrun\" onclick=\"postJsonAutomode()\">Auto mode Run!</button></p>";
 
 
-var epipopup = "<p class=\"popup\">set the epicenter marker here?</p>"+
-  "<button class=\"btn btn-default\" id=\"epicancel\" onclick=\"deleteEpiMarker()\">CANCEL</button>"+
+var epipopup = "<h4>set the epicenter marker here?</h4>"+
+  "<br><button class=\"btn btn-default\" id=\"epicancel\" onclick=\"deleteEpiMarker()\">CANCEL</button>"+
   "<button class=\"btn btn-default\" id=\"epiok\" onclick=\"setEQParam()\">OK</button>";
 
-var parampopup = "<p class=\"popup\">set Magnitude and Depth</p>"+
-  "<p>Magnitude(Mj)</p>"+
+var parampopup = "<h4>set Magnitude and Depth</h4>"+
+  "<br><h5>Magnitude(Mj)</h5>"+
   "<div id=\"mag-slider\" class=\"slider\"></div><input id=\"mag-input\"></input><br>"+
   "<button class=\"btn btn-default\" id=\"paramcancel\" onclick=\"resetEpiMarker()\">CANCEL</button>"+
   "<button class=\"btn btn-default btn-warning\" id=\"paramrun\" onclick=\"postJsonManualmode()\">Run!</button>";
