@@ -28,7 +28,7 @@ function showResult(json_data){
   obsMarker.bindPopup(
     "<h2 class=\"text-danger\">震度"+json_data.Scale+"の揺れを観測しました！</h2>"+
     "<br><h6> Tips:<br>"+json_data.Tips+"</h6>"+
-   "<br><a href=\"https://twitter.com/share\" data-size=\"large\" class=\"twitter-share-button\" data-url=\"http://hogehoge.com\" data-text=\"text\" data-hashtags=\"hashtag\">Tweet</a>"+
+    "<a href=\"https://twitter.com/share\" class=\"twitter-share-button\" data-url=\"http://seism.com\" data-text=\"Seismで震度"+ json_data.Scale+"を観測しました！\nTips: "+ json_data.Tips +"\n\" data-hashtags=\"Seism\">Tweet</a>"+
     "<br><button class=\"btn btn-default\" id=\"paramrun\" onclick=\"restart()\">Restart</button>"
     ,{maxWidth:600}
   ).openPopup();
