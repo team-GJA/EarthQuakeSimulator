@@ -10,7 +10,7 @@ $(document).ready(function(){
         $("#title").animate({
           opacity: 0
         },
-          2000,
+          1000,
           "swing",
           function(){$("#title").detach()}
         )
